@@ -1,20 +1,6 @@
 version: "3.8"
 
 services:
-  backend:
-    build: .
-    command:
-      - python manage.py runserver 0.0.0.0:8000
-    ports:
-      - '8002:8000'
-    container_name: start_helping_app_container
-    volumes:
-      - .:/code/
-    depends_on:
-      - db
-    env_file:
-      - ./env/.env
-
   db:
     image: postgres:14.2
     ports:
@@ -22,4 +8,22 @@ services:
     volumes:
       - postgres:/var/lib/postgresql/data
     env_file:
-      - ./env/.env_db
+      - ./env/database.env
+    container_name: postgres_db
+
+  backend:
+    build: .
+    volumes:
+      - .:/code/
+    ports:
+      - '8002:8000'
+    image: backend:code
+    container_name: start_helping_app_container
+    command: python manage.py runserver 0.0.0.0:8000
+    depends_on:
+      - db
+    env_file:
+      - ./env/.env
+
+volumes:
+  postgres:
