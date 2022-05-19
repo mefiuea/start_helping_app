@@ -10,9 +10,11 @@
     <link rel="stylesheet" href="{% static 'styles/style.css' %}">
     <script src="{% static 'scripts/app.js' %}" defer async></script>
 </head>
+<body>
 {% include 'navbar.html' %}
 {% block content %}
 
 {% endblock %}
 {% include 'footer.html' %}
+</body>
 </html>
