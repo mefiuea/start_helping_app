@@ -45,6 +45,7 @@ INSTALLED_APPS = [
 
     'home_app.apps.HomeAppConfig',
     'users_app.apps.UsersAppConfig',
+    'donation_app.apps.DonationAppConfig',
 ]
 
 MIDDLEWARE = [
