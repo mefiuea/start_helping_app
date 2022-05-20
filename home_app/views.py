@@ -1,7 +1,6 @@
-from django.http import HttpResponse
 from django.shortcuts import render
-
 from donation_app.models import DonationModel, InstitutionModel
+from django.core.paginator import Paginator
 
 
 def landing_page_view(request):
@@ -16,7 +15,7 @@ def landing_page_view(request):
         number_of_institutions = InstitutionModel.objects.all().count()
 
         # load institutions from database
-        foundations = InstitutionModel.objects.filter(type='F')
+        foundations = InstitutionModel.objects.filter(type='F').order_by('id')
 
         # load non-governmental organizations from database
         organizations = InstitutionModel.objects.filter(type='OP')
@@ -24,10 +23,15 @@ def landing_page_view(request):
         # load local collections from database
         local_collections = InstitutionModel.objects.filter(type='ZL')
 
+        # setting Pagination for foundations
+        paginator_instance = Paginator(foundations, 5)
+        page = request.GET.get('page')
+        foundations_paginator_instance = paginator_instance.get_page(page)
+
         context = {
             'sum_of_bags': sum_quantity_bags,
             'number_of_institutions': number_of_institutions,
-            'foundations': foundations,
+            'foundations': foundations_paginator_instance,
             'organizations': organizations,
             'local_collections': local_collections,
         }

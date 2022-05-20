@@ -106,13 +106,25 @@
                     </li>
                 {% endfor %}
             </ul>
-            <!-- Pagination
-			<ul class="help--slides-pagination">
-			  <li><a href="#" class="btn btn--small btn--without-border active" data-page="1">1</a></li>
-			  <li><a href="#" class="btn btn--small btn--without-border" data-page="2">2</a></li>
-			  <li><a href="#" class="btn btn--small btn--without-border" data-page="3">3</a></li>
-			</ul>
-			-->
+            {#Pagination#}
+            <ul class="help--slides-pagination">
+                {% if foundations.has_previous %}
+                    <li><a href="?page=1"
+                           class="btn btn--small btn--without-border active">&laquo;</a></li>
+                    <li><a href="?page={{ foundations.previous_page_number }}"
+                           class="btn btn--small btn--without-border">Poprzednia strona</a></li>
+                {% endif %}
+
+                {% if foundations.has_next %}
+                    <li><a href="?page={{ foundations.next_page_number }}"
+                           class="btn btn--small btn--without-border">Następna strona</a></li>
+                    <li><a href="?page={{ foundations.paginator.num_pages }}"
+                           class="btn btn--small btn--without-border active">&raquo;</a></li>
+                {% endif %}
+            </ul>
+            <div class="help--slides-pagination">
+                {{ foundations.number }} z {{ foundations.paginator.num_pages }}
+            </div>
         </div>
 
 
