@@ -1,11 +1,24 @@
+import enum
+
 from django.db import models
 from django.core.validators import RegexValidator, MaxLengthValidator
 from django.contrib.auth import get_user_model
 
-
 # Validators
 phone_regex = RegexValidator(regex=r'(?<!\w)(\(?(\+|00)?48\)?)?[ -]?\d{3}[ -]?\d{3}[ -]?\d{3}(?!\w)')
 zip_code_regex = RegexValidator(regex=r'\d{2}-\d{3}')
+
+
+# Enums choices
+@enum.unique
+class Type(str, enum.Enum):
+    F = 'Fundacja'
+    OP = 'Organizacja Pozarządowa'
+    ZL = 'Zbiórka Lokalna'
+
+    @classmethod
+    def choices(cls):
+        return [(item.value, item.name) for item in cls]
 
 
 class CategoryModel(models.Model):
@@ -15,12 +28,12 @@ class CategoryModel(models.Model):
 class InstitutionModel(models.Model):
     name = models.CharField(max_length=200, unique=True, blank=False, verbose_name='Nazwa')
     description = models.TextField(blank=False, validators=[MaxLengthValidator(2000)], verbose_name='Opis')
-    TYPE_CHOICES = [
-        ('F', 'Fundacja'),
-        ('OP', 'Organizacja Pozarządowa'),
-        ('ZL', 'Zbiórka Lokalna'),
-    ]
-    type = models.CharField(max_length=23, choices=TYPE_CHOICES, blank=False, default='F', verbose_name='Typ')
+    # TYPE_CHOICES = [
+    #     ('F', 'Fundacja'),
+    #     ('OP', 'Organizacja Pozarządowa'),
+    #     ('ZL', 'Zbiórka Lokalna'),
+    # ]
+    type = models.CharField(max_length=23, choices=Type.choices(), blank=False, default=Type.F, verbose_name='Typ')
     categories = models.ManyToManyField('CategoryModel', blank=False, related_name='institution_category')
 
 
