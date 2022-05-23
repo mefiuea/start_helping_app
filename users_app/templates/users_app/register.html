@@ -5,22 +5,37 @@
 {% block content %}
     <section class="login-page">
         <h2>Załóż konto</h2>
-        <form>
+        <form method="post">
             {% csrf_token %}
             <div class="form-group">
-                <input type="text" name="name" placeholder="Imię"/>
+                <input type="text" name="first_name" placeholder="Imię"/>
+                {% if errors_list.0 %}
+                    <p>{{ errors_list.0.1 }}</p>
+                {% endif %}
             </div>
             <div class="form-group">
-                <input type="text" name="surname" placeholder="Nazwisko"/>
+                <input type="text" name="last_name" placeholder="Nazwisko"/>
+                {% if errors_list.1 %}
+                    <p>{{ errors_list.1.1 }}</p>
+                {% endif %}
             </div>
             <div class="form-group">
                 <input type="email" name="email" placeholder="Email"/>
+                {% if errors_list.2 %}
+                    <p>{{ errors_list.2.1 }}</p>
+                {% endif %}
             </div>
             <div class="form-group">
-                <input type="password" name="password" placeholder="Hasło"/>
+                <input type="password" name="password1" placeholder="Hasło"/>
+                {% if errors_list.3 %}
+                    <p>{{ errors_list.3.1 }}</p>
+                {% endif %}
             </div>
             <div class="form-group">
                 <input type="password" name="password2" placeholder="Powtórz hasło"/>
+                {% if errors_list.4 %}
+                    <p>{{ errors_list.4.1 }}</p>
+                {% endif %}
             </div>
 
             <div class="form-group form-group--buttons">
