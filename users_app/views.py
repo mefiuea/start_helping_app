@@ -28,11 +28,14 @@ def login_view(request):
         if form.is_valid():
             username = form.cleaned_data.get('username')
             password = form.cleaned_data.get('password')
-            user = authenticate(email=username, password=password)
+            user = authenticate(request, email=username, password=password)
             if user is not None:
                 if user.is_active:
                     login(request, user)
-                    return redirect('home_app:landing_page_view')
+                    if 'next' in request.POST:
+                        return redirect(request.POST.get('next'))
+                    else:
+                        return redirect('home_app:landing_page_view')
             else:
                 return redirect('users_app:register_view')
         else:

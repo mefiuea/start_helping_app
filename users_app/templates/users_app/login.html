@@ -16,11 +16,14 @@
                 <p>{{ form.password.errors }}</p>
                 <a href="#" class="btn btn--small btn--without-border reset-password">Przypomnij hasło</a>
             </div>
+            {% if request.GET.next %}
+                <input type="hidden" name="next" value="{{ request.GET.next }}">
+            {% endif %}
             <div class="form-group form-group--buttons">
                 <a href="{% url 'users_app:register_view' %}" class="btn btn--without-border">Załóż konto</a>
                 <button class="btn" type="submit">Zaloguj się</button>
             </div>
         </form>
-    {{ form.non_field_errors }}
+        {{ form.non_field_errors }}
     </section>
 {% endblock %}
