@@ -63,7 +63,7 @@
 
                     {% for category in categories %}
                         <div class="form-group form-group--checkbox">
-                            <label>
+                            <label id="cat">
                                 <input class="checkboxy"
                                        type="checkbox"
                                        name="categories"
@@ -182,18 +182,15 @@
                         <div class="form-section">
                             <h4>Oddajesz:</h4>
                             <ul>
-                                <li>
+                                <li id="bags-summary">
                                     <span class="icon icon-bag"></span>
-                                    <span class="summary--text"
-                                    >4 worki ubrań w dobrym stanie dla dzieci</span
-                                    >
+                                    <span class="summary--text">Ilość worków i kategoria</span>
                                 </li>
 
-                                <li>
+                                <li id="institution-summary">
                                     <span class="icon icon-hand"></span>
                                     <span class="summary--text"
-                                    >Dla fundacji "Mam marzenie" w Warszawie</span
-                                    >
+                                    >Dla Nazwa fundacji</span>
                                 </li>
                             </ul>
                         </div>
@@ -202,19 +199,19 @@
                             <div class="form-section--column">
                                 <h4>Adres odbioru:</h4>
                                 <ul>
-                                    <li>Prosta 51</li>
-                                    <li>Warszawa</li>
-                                    <li>99-098</li>
-                                    <li>123 456 789</li>
+                                    <li id="street-summary">Ulica</li>
+                                    <li id="city-summary">Miasto</li>
+                                    <li id="postal-code-summary">Kod pocztowy</li>
+                                    <li id="phone-number-summary">Numer telefonu</li>
                                 </ul>
                             </div>
 
                             <div class="form-section--column">
                                 <h4>Termin odbioru:</h4>
                                 <ul>
-                                    <li>13/12/2018</li>
-                                    <li>15:40</li>
-                                    <li>Brak uwag</li>
+                                    <li id="pickup-date-summary">Data odbioru</li>
+                                    <li id="pickup-time-summary">Godzina odbioru</li>
+                                    <li id="comments-for-courier-summary">Uwagi</li>
                                 </ul>
                             </div>
                         </div>
