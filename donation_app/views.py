@@ -11,7 +11,7 @@ def add_donation_view(request):
         form = DonationForm(request.POST or None)
         if form.is_valid():
             print('FORMULARZ ZWALIDOWANY!!!!!!!!!!', flush=True)
-            categories = request.POST.getlist('categories')
+            categories_list = request.POST.getlist('categories')
             bags = form.cleaned_data['bags']
             organization = form.cleaned_data['organization']
             organization_instance = InstitutionModel.objects.get(name=organization)
@@ -23,7 +23,7 @@ def add_donation_view(request):
             time = form.cleaned_data['time']
             more_info = form.cleaned_data['more_info']
 
-            print(categories, type(categories), flush=True)
+            print(categories_list, type(categories_list), flush=True)
             print(bags, type(bags), flush=True)
             print(organization, type(organization), flush=True)
             print(organization_instance, type(organization_instance), flush=True)
@@ -39,8 +39,18 @@ def add_donation_view(request):
             donation = DonationModel(quantity=bags, institution=organization_instance, address=address,
                                      phone_number=phone, city=city, zip_code=postcode, pick_up_date=data,
                                      pick_up_time=time, pick_up_comment=more_info)
-            # donation.user = request.user
+            donation.user_donator = request.user
             donation.save()
+            # category list from html
+            # create instances of selected categories
+            categories_list_instances = []
+            for category in categories_list:
+                category_instance = CategoryModel.objects.get(pk=int(category))
+                categories_list_instances.append(category_instance)
+            # add categories to donation
+            for category_instance in categories_list_instances:
+                donation.categories.add(category_instance)
+
         else:
             print('FORMULARZ NIEZWALIDOWANY!!!!!!!!!!', flush=True)
             # get categories from database
@@ -62,6 +72,7 @@ def add_donation_view(request):
 
         # get institutions from database
         institutions = InstitutionModel.objects.all().order_by('id')
+        print('INSTYTUCJE: ', institutions, flush=True)
 
         context = {
             'categories': categories,
