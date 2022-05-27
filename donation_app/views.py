@@ -1,12 +1,61 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 
-from .models import CategoryModel, InstitutionModel
-from django.http import HttpRequest, HttpResponse
+from .models import CategoryModel, InstitutionModel, DonationModel
+from .forms import DonationForm
 
 
 @login_required
 def add_donation_view(request):
+    if request.method == 'POST':
+        form = DonationForm(request.POST or None)
+        if form.is_valid():
+            print('FORMULARZ ZWALIDOWANY!!!!!!!!!!', flush=True)
+            categories = request.POST.getlist('categories')
+            bags = form.cleaned_data['bags']
+            organization = form.cleaned_data['organization']
+            organization_instance = InstitutionModel.objects.get(name=organization)
+            address = form.cleaned_data['address']
+            city = form.cleaned_data['city']
+            postcode = form.cleaned_data['postcode']
+            phone = form.cleaned_data['phone']
+            data = form.cleaned_data['data']
+            time = form.cleaned_data['time']
+            more_info = form.cleaned_data['more_info']
+
+            print(categories, type(categories), flush=True)
+            print(bags, type(bags), flush=True)
+            print(organization, type(organization), flush=True)
+            print(organization_instance, type(organization_instance), flush=True)
+            print(address, type(address), flush=True)
+            print(city, type(city), flush=True)
+            print(postcode, type(postcode), flush=True)
+            print(phone, type(phone), flush=True)
+            print(data, type(data), flush=True)
+            print(time, type(time), flush=True)
+            print(more_info, type(more_info), flush=True)
+
+            # create Donation object
+            donation = DonationModel(quantity=bags, institution=organization_instance, address=address,
+                                     phone_number=phone, city=city, zip_code=postcode, pick_up_date=data,
+                                     pick_up_time=time, pick_up_comment=more_info)
+            # donation.user = request.user
+            donation.save()
+        else:
+            print('FORMULARZ NIEZWALIDOWANY!!!!!!!!!!', flush=True)
+            # get categories from database
+            categories = CategoryModel.objects.all().order_by('id')
+            # get institutions from database
+            institutions = InstitutionModel.objects.all().order_by('id')
+            context = {'form': form,
+                       'categories': categories,
+                       'institutions': institutions,
+                       }
+            return render(request, 'donation_app/form.html', context=context)
+            # return redirect('donation_app:donation_view')
+
+        return render(request, 'donation_app/form_confirmation.html')
+
     if request.method == 'GET':
         # get categories from database
         categories = CategoryModel.objects.all().order_by('id')

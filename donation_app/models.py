@@ -48,5 +48,5 @@ class DonationModel(models.Model):
     pick_up_date = models.DateField(verbose_name='Data')
     pick_up_time = models.TimeField(verbose_name='Godzina')
     pick_up_comment = models.TextField(blank=True, null=True, validators=[MaxLengthValidator(300)], verbose_name='Opis')
-    user = models.ForeignKey(get_user_model(), blank=True, null=True, default=None, on_delete=models.PROTECT,
-                             related_name='donator')
+    user_donator = models.ForeignKey(get_user_model(), blank=True, null=True, default=None, on_delete=models.PROTECT,
+                                     related_name='donator')

@@ -65,15 +65,20 @@ window.addEventListener('DOMContentLoaded', (event) => {
         document.getElementById('pickup-date-summary').innerText = pickup_date
         document.getElementById('pickup-time-summary').innerText = pickup_time
         document.getElementById('comments-for-courier-summary').innerText = comments_for_courier
+    }
 
+    function submit_form() {
+        // submit button - send data to server
+        document.getElementById('donation-form').submit();
     }
 
     $(document).ready(function () {
         let checkbox_buttons = $('.checkboxy');
         checkbox_buttons.click(show_id);
         let next_button = $('#summary-button');
-        // let next_button = $('.next-step');
         next_button.click(form_summary);
+        let submit_button = $('#submit-form-button');
+        submit_button.click(submit_form);
     });
 
     // const checkButton = document.getElementById('cb');

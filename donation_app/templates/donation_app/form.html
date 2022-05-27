@@ -55,7 +55,7 @@
         <div class="form--steps-container">
             <div class="form--steps-counter">Krok <span>1</span>/5</div>
 
-            <form action="" method="post">
+            <form action="{% url 'donation_app:donation_view' %}" method="post" id="donation-form">
                 {% csrf_token %}
                 <!-- STEP 1: class .active is switching steps -->
                 <div data-step="1" class="active" id="cb">
@@ -68,6 +68,7 @@
                                        type="checkbox"
                                        name="categories"
                                        value="{{ category.id }}"
+                                        {#                                       {% if category.cat %} checked {% else %}{% endif %}#}
                                 />
                                 <span class="checkbox"></span>
                                 <span class="description">{{ category.name }}</span>
@@ -78,6 +79,33 @@
                     <div class="form-group form-group--buttons">
                         <button type="button" class="btn next-step">Dalej</button>
                     </div>
+                    {% if form.categories.errors %}
+                        <p>Kategorie: {{ form.categories.errors }}</p>
+                    {% endif %}
+                    {% if form.bags.errors %}
+                        <p>Worki: {{ form.bags.errors }}</p>
+                    {% endif %}
+                    {% if form.organization.errors %}
+                        <p>Organizacje: {{ form.organization.errors }}</p>
+                    {% endif %}
+                    {% if form.address.errors %}
+                        <p>Ulica: {{ form.address.errors }}</p>
+                    {% endif %}
+                    {% if form.city.errors %}
+                        <p>Miasto: {{ form.city.errors }}</p>
+                    {% endif %}
+                    {% if form.postcode.errors %}
+                        <p>Kod pocztowy: {{ form.postcode.errors }}</p>
+                    {% endif %}
+                    {% if form.phone.errors %}
+                        <p>Numer telefonu: {{ form.phone.errors }}</p>
+                    {% endif %}
+                    {% if form.data.errors %}
+                        <p>Data: {{ form.data.errors }}</p>
+                    {% endif %}
+                    {% if form.time.errors %}
+                        <p>Godzina: {{ form.time.errors }}</p>
+                    {% endif %}
                 </div>
 
                 <!-- STEP 2 -->
@@ -87,7 +115,10 @@
                     <div class="form-group form-group--inline">
                         <label>
                             Liczba 60l worków:
-                            <input type="number" name="bags" step="1" min="1" id="bags"/>
+                            <input type="number" name="bags" step="1" min="1" id="bags"
+                                    {% if form.bags.value %} value="{{ form.bags.value }}" {% endif %}/>
+                            <p>{{ form.bags.errors }}</p>
+                            <p>{{ form.bags.help_text }}</p>
                         </label>
                     </div>
 
@@ -112,6 +143,8 @@
                                     <div class="subtitle">{{ institution.description }}</div>
                                 </span>
                                 </label>
+                                <p>{{ form.organization.errors }}</p>
+                                <p>{{ form.organization.help_text }}</p>
                             </div>
                         {% endfor %}
                     </div>
@@ -130,41 +163,62 @@
                         <div class="form-section--column">
                             <h4>Adres odbioru</h4>
                             <div class="form-group form-group--inline">
-                                <label> Ulica <input type="text" name="address" id="street"/> </label>
-                            </div>
-
-                            <div class="form-group form-group--inline">
-                                <label> Miasto <input type="text" name="city" id="city"/> </label>
-                            </div>
-
-                            <div class="form-group form-group--inline">
-                                <label>
-                                    Kod pocztowy <input type="text" name="postcode" id="postal-code"/>
+                                <label> Ulica <input type="text" name="address" id="street"
+                                        {% if form.address.value %} value="{{ form.address.value }}" {% endif %}/>
                                 </label>
+                                <p>{{ form.address.errors }}</p>
+                                <p>{{ form.address.help_text }}</p>
                             </div>
 
                             <div class="form-group form-group--inline">
-                                <label>
-                                    Numer telefonu <input type="phone" name="phone" id="phone-number"/>
-                                </label>
+                                <label> Miasto <input type="text" name="city" id="city"
+                                        {% if form.city.value %} value="{{ form.city.value }}" {% endif %}/> </label>
+                                <p>{{ form.city.errors }}</p>
+                                <p>{{ form.city.help_text }}</p>
+                            </div>
+
+                            <div class="form-group form-group--inline">
+                                <label>Kod pocztowy <input type="text" name="postcode" placeholder="XX-YYY"
+                                                           id="postal-code"
+                                        {% if form.postcode.value %}
+                                                           value="{{ form.postcode.value }}" {% endif %}/></label>
+                                <p>{{ form.postcode.errors }}</p>
+                                <p>{{ form.postcode.help_text }}</p>
+                            </div>
+
+                            <div class="form-group form-group--inline">
+                                <label>Numer telefonu <input type="text" name="phone" id="phone-number"
+                                        {% if form.phone.value %} value="{{ form.phone.value }}" {% endif %}/></label>
+                                <p>{{ form.phone.errors }}</p>
+                                <p>{{ form.phone.help_text }}</p>
                             </div>
                         </div>
 
                         <div class="form-section--column">
                             <h4>Termin odbioru</h4>
                             <div class="form-group form-group--inline">
-                                <label> Data <input type="date" name="data" id="pickup-date"/> </label>
+                                <label> Data <input type="date" name="data" id="pickup-date"
+                                        {% if form.data.value %} value="{{ form.data.value }}" {% endif %}/> </label>
+                                <p>{{ form.data.errors }}</p>
+                                <p>{{ form.data.help_text }}</p>
                             </div>
 
                             <div class="form-group form-group--inline">
-                                <label> Godzina <input type="time" name="time" id="pickup-time"/> </label>
+                                <label> Godzina <input type="time" name="time" id="pickup-time"
+                                        {% if form.time.value %} value="{{ form.time.value }}" {% endif %}/> </label>
+                                <p>{{ form.time.errors }}</p>
+                                <p>{{ form.time.help_text }}</p>
                             </div>
 
                             <div class="form-group form-group--inline">
                                 <label>
                                     Uwagi dla kuriera
-                                    <textarea name="more_info" rows="5" id="comments-for-courier"></textarea>
+                                    <textarea name="more_info" rows="5"
+                                              id="comments-for-courier">{% if form.more_info.value %}
+                                        {{ form.more_info.value }}{% endif %}</textarea>
                                 </label>
+                                <p>{{ form.more_info.errors }}</p>
+                                <p>{{ form.more_info.help_text }}</p>
                             </div>
                         </div>
                     </div>
@@ -219,7 +273,7 @@
 
                     <div class="form-group form-group--buttons">
                         <button type="button" class="btn prev-step">Wstecz</button>
-                        <button type="submit" class="btn">Potwierdzam</button>
+                        <button type="submit" class="btn" id="submit-form-button">Potwierdzam</button>
                     </div>
                 </div>
             </form>

@@ -237,6 +237,7 @@ document.addEventListener("DOMContentLoaded", function () {
             this.$step.parentElement.hidden = this.currentStep >= 6;
 
             // TODO: get data from inputs and show them in summary
+            // in my_script.js
         }
 
         /**
@@ -245,7 +246,7 @@ document.addEventListener("DOMContentLoaded", function () {
          * TODO: validation, send data to server
          */
         submit(e) {
-            e.preventDefault();
+            // e.preventDefault();
             this.currentStep++;
             this.updateForm();
         }
