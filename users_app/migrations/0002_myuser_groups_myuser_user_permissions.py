@@ -6,7 +6,6 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('auth', '0014_alter_user_email'),
         ('users_app', '0001_initial'),
     ]
 

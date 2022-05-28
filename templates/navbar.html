@@ -9,6 +9,9 @@
                     <ul class="dropdown">
                         <li><a href="#">Profil</a></li>
                         <li><a href="#">Ustawienia</a></li>
+                        {% if user.is_authenticated and user.is_superuser %}
+                            <li><a href="admin">Panel administracyjny</a></li>
+                        {% endif %}
                         <li><a href="{% url 'users_app:logout_view' %}">Wyloguj</a></li>
                     </ul>
                 </li>
