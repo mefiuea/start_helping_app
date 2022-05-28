@@ -39,7 +39,7 @@ class MyUserManager(BaseUserManager):
         return user
 
 
-class MyUser(AbstractBaseUser):
+class MyUser(AbstractBaseUser, PermissionsMixin):
     first_name = models.CharField(max_length=30, unique=False, verbose_name='first name')
     last_name = models.CharField(max_length=30, unique=False, verbose_name='last name')
     email = models.EmailField(max_length=100, unique=True, verbose_name='email')

@@ -8,8 +8,8 @@
                     Witaj {{ user.first_name }}
                     <ul class="dropdown">
                         <li><a href="#">Profil</a></li>
-                        <li><a href="{% url 'users_app:logout_view' %}">Wyloguj</a></li>
                         <li><a href="#">Ustawienia</a></li>
+                        <li><a href="{% url 'users_app:logout_view' %}">Wyloguj</a></li>
                     </ul>
                 </li>
             {% else %}

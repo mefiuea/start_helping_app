@@ -21,6 +21,7 @@ from config import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    # path('GQ4DeazV/', admin.site.urls),
     path('', include('home_app.urls')),
     path('', include('users_app.urls')),
     path('', include('donation_app.urls')),
