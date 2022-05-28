@@ -2,6 +2,8 @@ from django.shortcuts import render
 from donation_app.models import DonationModel, InstitutionModel
 from django.core.paginator import Paginator
 
+from donation_app.models import Type
+
 
 def landing_page_view(request):
     if request.method == 'GET':
@@ -15,13 +17,13 @@ def landing_page_view(request):
         number_of_institutions = InstitutionModel.objects.all().count()
 
         # load institutions from database
-        foundations = InstitutionModel.objects.filter(type='F').order_by('id')
+        foundations = InstitutionModel.objects.filter(type=Type.F).order_by('id')
 
         # load non-governmental organizations from database
-        organizations = InstitutionModel.objects.filter(type='OP')
+        organizations = InstitutionModel.objects.filter(type=Type.OP)
 
         # load local collections from database
-        local_collections = InstitutionModel.objects.filter(type='ZL')
+        local_collections = InstitutionModel.objects.filter(type=Type.ZL)
 
         # setting Pagination for foundations
         paginator_instance = Paginator(foundations, 5)

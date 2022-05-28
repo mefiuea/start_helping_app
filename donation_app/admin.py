@@ -1,3 +1,9 @@
 from django.contrib import admin
 
-# Register your models here.
+from .models import InstitutionModel
+
+
+@admin.register(InstitutionModel)
+class InstitutionAdmin(admin.ModelAdmin):
+    list_display = ('name', 'type')
+

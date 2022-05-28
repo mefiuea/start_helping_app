@@ -24,6 +24,9 @@ class Type(str, enum.Enum):
 class CategoryModel(models.Model):
     name = models.CharField(max_length=200, unique=True, blank=False, verbose_name='Nazwa')
 
+    def __str__(self):
+        return self.name
+
 
 class InstitutionModel(models.Model):
     name = models.CharField(max_length=200, unique=True, blank=False, verbose_name='Nazwa')
@@ -35,6 +38,9 @@ class InstitutionModel(models.Model):
     # ]
     type = models.CharField(max_length=23, choices=Type.choices(), blank=False, default=Type.F, verbose_name='Typ')
     categories = models.ManyToManyField('CategoryModel', blank=False, related_name='institution_category')
+
+    def __str__(self):
+        return self.name
 
 
 class DonationModel(models.Model):
