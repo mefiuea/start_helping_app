@@ -59,3 +59,7 @@ def login_view(request):
 def logout_view(request):
     logout(request)
     return redirect('home_app:landing_page_view')
+
+
+def profile_view(request):
+    return render(request, 'users_app/profile.html')

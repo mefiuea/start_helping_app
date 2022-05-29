@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Profil{% endblock %}
+{% block content %}
+    <section class="login-page">
+        <h2>Profil</h2>
+        <div class="form-group">
+            <h1>Imię:</h1>
+            <h3>{{ user.first_name }}</h3>
+            <h1>Nazwisko:</h1>
+            <h3>{{ user.last_name }}</h3>
+            <h1>Email:</h1>
+            <h3>{{ user.email }}</h3>
+        </div>
+    </section>
+{% endblock %}
