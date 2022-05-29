@@ -3,6 +3,7 @@ from django.contrib.auth import get_user_model, authenticate, login, logout
 from django.core.exceptions import ObjectDoesNotExist
 
 from .forms import RegistrationForm, LoginForm
+from donation_app.models import DonationModel
 
 
 def register_view(request):
@@ -62,4 +63,14 @@ def logout_view(request):
 
 
 def profile_view(request):
-    return render(request, 'users_app/profile.html')
+    user = request.user
+    # find donation for specific user
+    donations = DonationModel.objects.filter(user_donator=user)
+    print('DONATIONS: ', donations, flush=True)
+    for donation in donations:
+        print('INSTITUTIONS: ', donation.categories.all(), flush=True)
+    context = {
+        'donations': donations,
+    }
+
+    return render(request, 'users_app/profile.html', context=context)
