@@ -11,26 +11,12 @@ def add_donation_view(request):
         form = DonationForm(request.POST or None)
         categories_list = request.POST.getlist('categories')
         categories_list_int = []
-        institutions_list = []
-        ic_id_list = []
 
         for cat in categories_list:
             categories_list_int.append(int(cat))
 
-        institutions = InstitutionModel.objects.all()
-        for institution in institutions:
-            print(institution, flush=True)
-            for ic in institution.categories.all():
-                # print(ic.id, flush=True)
-                ic_id_list.append(ic.id)
-            print(ic_id_list, flush=True)
-
-            check = all(item in ic_id_list for item in categories_list_int)
-            if check is True:
-                institutions_list.append(institution)
-
-            ic_id_list = []
-        print('LISTA PASUJĄCYCH INSTYTUCJI POST: ', institutions_list, flush=True)
+        institutions = InstitutionModel.objects.all().order_by('id')
+        institutions_list = filter_common_categories_institutions(institutions, categories_list_int)
 
         print(categories_list, type(categories_list), flush=True)
 
@@ -81,7 +67,7 @@ def add_donation_view(request):
             # get categories from database
             categories = CategoryModel.objects.all().order_by('id')
             # get institutions from database
-            institutions = InstitutionModel.objects.all().order_by('id')
+            # institutions = InstitutionModel.objects.all().order_by('id')
             context = {'form': form,
                        'categories': categories,
                        'institutions': institutions,
@@ -111,7 +97,6 @@ def add_donation_view(request):
 
 
 def get_institutions_by_id(request):
-    ic_id_list = []
     institutions_list = []
     type_ids_int = []
     type_ids = request.GET.getlist('type_ids')
@@ -119,21 +104,8 @@ def get_institutions_by_id(request):
         type_ids_int.append(int(element))
     print('PRINT:', type_ids, flush=True)
     if type_ids:
-        # institutions = InstitutionModel.objects.filter(categories__in=type_ids).distinct()
         institutions = InstitutionModel.objects.all()
-        for institution in institutions:
-            print(institution, flush=True)
-            for ic in institution.categories.all():
-                # print(ic.id, flush=True)
-                ic_id_list.append(ic.id)
-            print(ic_id_list, flush=True)
-
-            check = all(item in ic_id_list for item in type_ids_int)
-            if check is True:
-                institutions_list.append(institution)
-
-            ic_id_list = []
-        print('LISTA PASUJĄCYCH INSTYTUCJI: ', institutions_list, flush=True)
+        institutions_list = filter_common_categories_institutions(institutions, type_ids_int)
 
     else:
         institutions = InstitutionModel.objects.all()
@@ -145,3 +117,22 @@ def get_institutions_by_id(request):
     }
 
     return render(request, 'donation_app/institutions.html', context=context)
+
+
+def filter_common_categories_institutions(institutions, categories_list):
+    ic_id_list = []
+    institutions_list = []
+    for institution in institutions:
+        print(institution, flush=True)
+        for ic in institution.categories.all():
+            # print(ic.id, flush=True)
+            ic_id_list.append(ic.id)
+        print(ic_id_list, flush=True)
+
+        check = all(item in ic_id_list for item in categories_list)
+        if check is True:
+            institutions_list.append(institution)
+
+        ic_id_list = []
+    print('LISTA PASUJĄCYCH INSTYTUCJI POST: ', institutions_list, flush=True)
+    return institutions_list
