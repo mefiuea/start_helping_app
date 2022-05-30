@@ -56,3 +56,5 @@ class DonationModel(models.Model):
     pick_up_comment = models.TextField(blank=True, null=True, validators=[MaxLengthValidator(300)], verbose_name='Opis')
     user_donator = models.ForeignKey(get_user_model(), blank=True, null=True, default=None, on_delete=models.PROTECT,
                                      related_name='donator')
+    is_taken = models.BooleanField(default=False, verbose_name='Odebrane?')
+    date_add = models.DateTimeField(auto_now_add=True)

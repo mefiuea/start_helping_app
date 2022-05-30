@@ -18,11 +18,16 @@
             <h1>Lista przekazanych darów:</h1>
             <ul>
                 {% for donation in donations %}
-                <li><h3><u>{{ donation.quantity }}</u> worków dla <u>{{ donation.institution.name }}</u> z kategorii: <u>
-                    {% for category in donation.categories.all %}
-                        {{ category }}{% if forloop.last %}{% else %},{% endif %}
-                    {% endfor %}</u>. Data odbioru: <u>{{ donation.pick_up_date }}, {{ donation.pick_up_time }}</u></h3></li>
+                    <li><h3><u>{{ donation.quantity }}</u> worków dla <u>{{ donation.institution.name }}</u> z
+                        kategorii: <u>
+                            {% for category in donation.categories.all %}
+                                {{ category }}{% if forloop.last %}{% else %},{% endif %}
+                            {% endfor %}</u>. Data odbioru:
+                        <u>{{ donation.pick_up_date }}, {{ donation.pick_up_time }}</u></h3></li>
                 {% endfor %}
+            </ul>
+            <h1>Lista przekazanych darów i odebranych ode mnie przez kuriera:</h1>
+            <ul>
             </ul>
         </div>
     </section>
