@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import get_user_model, authenticate, login, logout
 from django.core.exceptions import ObjectDoesNotExist
 
-from .forms import RegistrationForm, LoginForm
+from .forms import RegistrationForm, LoginForm, ProfileEditForm
 from donation_app.models import DonationModel
 
 
@@ -88,8 +88,24 @@ def profile_view(request):
 
 def profile_settings_view(request):
     if request.method == 'POST':
-        pass
+        form = ProfileEditForm(request.POST or None)
+        if form.is_valid():
+            first_name = form.cleaned_data['first_name']
+            last_name = form.cleaned_data['last_name']
+            email = form.cleaned_data['email']
+            print('FN: ', first_name, flush=True)
+            print('FN: ', last_name, flush=True)
+            print('FN: ', email, flush=True)
+        else:
+            print('Walidacja formularza nie przeszła', flush=True)
+
+        return redirect('users_app:profile_settings_view')
 
     if request.method == 'GET':
+        form = ProfileEditForm()
 
-        return render(request, 'users_app/profile_settings.html')
+        context = {
+            'form': form,
+        }
+
+        return render(request, 'users_app/profile_settings.html', context=context)

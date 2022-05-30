@@ -33,3 +33,13 @@ class LoginForm(AuthenticationForm):
 
     class Meta:
         fields = ('username', 'password')
+
+
+class ProfileEditForm(forms.Form):
+    first_name = forms.CharField(label=_('first name'), help_text='Imię jest wymagane')
+    last_name = forms.CharField(label=_('last name'), help_text='Nazwisko jest wymagane')
+    email = forms.EmailField(label=_('email'), help_text='Email musi być unikalny i w formie X@Y.pl/com...')
+
+    # class Meta:
+    #     model = get_user_model()
+    #     fields = ('first_name', 'last_name', 'email')
