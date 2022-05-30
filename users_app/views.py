@@ -84,3 +84,12 @@ def profile_view(request):
         }
 
         return render(request, 'users_app/profile.html', context=context)
+
+
+def profile_settings_view(request):
+    if request.method == 'POST':
+        pass
+
+    if request.method == 'GET':
+
+        return render(request, 'users_app/profile_settings.html')
