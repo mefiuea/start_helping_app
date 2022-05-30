@@ -30,11 +30,16 @@ def landing_page_view(request):
         page = request.GET.get('page')
         foundations_paginator_instance = paginator_instance.get_page(page)
 
+        # setting Pagination for non-governmental organizations
+        paginator_instance2 = Paginator(organizations, 5)
+        page2 = request.GET.get('page2')
+        organizations_paginator_instance = paginator_instance2.get_page(page2)
+
         context = {
             'sum_of_bags': sum_quantity_bags,
             'number_of_institutions': number_of_institutions,
             'foundations': foundations_paginator_instance,
-            'organizations': organizations,
+            'organizations': organizations_paginator_instance,
             'local_collections': local_collections,
         }
 

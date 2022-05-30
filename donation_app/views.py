@@ -9,9 +9,35 @@ from .forms import DonationForm
 def add_donation_view(request):
     if request.method == 'POST':
         form = DonationForm(request.POST or None)
+        categories_list = request.POST.getlist('categories')
+        categories_list_int = []
+        institutions_list = []
+        ic_id_list = []
+
+        for cat in categories_list:
+            categories_list_int.append(int(cat))
+
+        institutions = InstitutionModel.objects.all()
+        for institution in institutions:
+            print(institution, flush=True)
+            for ic in institution.categories.all():
+                # print(ic.id, flush=True)
+                ic_id_list.append(ic.id)
+            print(ic_id_list, flush=True)
+
+            check = all(item in ic_id_list for item in categories_list_int)
+            if check is True:
+                institutions_list.append(institution)
+
+            ic_id_list = []
+        print('LISTA PASUJĄCYCH INSTYTUCJI POST: ', institutions_list, flush=True)
+
+        print(categories_list, type(categories_list), flush=True)
+
+        organization_radio_button = request.POST.get('organization')
+        print('organization_radio_button', organization_radio_button, type(organization_radio_button), flush=True)
         if form.is_valid():
             print('FORMULARZ ZWALIDOWANY!!!!!!!!!!', flush=True)
-            categories_list = request.POST.getlist('categories')
             bags = form.cleaned_data['bags']
             organization = form.cleaned_data['organization']
             organization_instance = InstitutionModel.objects.get(name=organization)
@@ -23,7 +49,6 @@ def add_donation_view(request):
             time = form.cleaned_data['time']
             more_info = form.cleaned_data['more_info']
 
-            print(categories_list, type(categories_list), flush=True)
             print(bags, type(bags), flush=True)
             print(organization, type(organization), flush=True)
             print(organization_instance, type(organization_instance), flush=True)
@@ -60,6 +85,9 @@ def add_donation_view(request):
             context = {'form': form,
                        'categories': categories,
                        'institutions': institutions,
+                       'categories_list_int': categories_list_int,
+                       'institutions_list': institutions_list,
+                       'organization_radio_button': organization_radio_button,
                        }
             return render(request, 'donation_app/form.html', context=context)
             # return redirect('donation_app:donation_view')
