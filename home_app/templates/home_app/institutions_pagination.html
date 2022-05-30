@@ -1,0 +1,16 @@
+{% for organization in organizations %}
+    <li>
+        <div class="col">
+            <div class="title">{{ organization.name }}</div>
+            <div class="subtitle">{{ organization.description }}</div>
+        </div>
+
+        <div class="col">
+            <div class="text">
+                {% for category in organization.categories.all %}
+                    {{ category.name }}{% if forloop.last %}{% else %},{% endif %}
+                {% endfor %}
+            </div>
+        </div>
+    </li>
+{% endfor %}
