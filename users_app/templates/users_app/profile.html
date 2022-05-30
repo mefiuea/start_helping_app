@@ -16,18 +16,40 @@
         <div class="form-group">
             <hr>
             <h1>Lista przekazanych darów:</h1>
+            <form action="" method="post">
+                {% csrf_token %}
+                <ul>
+                    {% for donation in donations_not_taken %}
+                        <li>
+                            <h3>
+                                <u>{{ donation.quantity }}</u> worków dla <u>{{ donation.institution.name }}</u> z
+                                kategorii: <u>
+                                {% for category in donation.categories.all %}
+                                    {{ category }}{% if forloop.last %}{% else %},{% endif %}
+                                {% endfor %}</u>. Data odbioru:
+                                <u>{{ donation.pick_up_date }}, {{ donation.pick_up_time }}</u>
+                                Czy dar został ode mnie odebrany przez kuriera? (zaznacz jeżeli tak):
+                                <input type="checkbox" id="" name="is_taken" value="{{ donation.id }}">
+                            </h3>
+                        </li>
+                    {% endfor %}
+                </ul>
+                <input type="submit" value="Zapisz">
+            </form>
+            <h1>Lista przekazanych darów i odebranych ode mnie przez kuriera:</h1>
             <ul>
-                {% for donation in donations %}
-                    <li><h3><u>{{ donation.quantity }}</u> worków dla <u>{{ donation.institution.name }}</u> z
-                        kategorii: <u>
+                {% for donation in donations_taken %}
+                    <li>
+                        <h3>
+                            <u>{{ donation.quantity }}</u> worków dla <u>{{ donation.institution.name }}</u> z
+                            kategorii: <u>
                             {% for category in donation.categories.all %}
                                 {{ category }}{% if forloop.last %}{% else %},{% endif %}
                             {% endfor %}</u>. Data odbioru:
-                        <u>{{ donation.pick_up_date }}, {{ donation.pick_up_time }}</u></h3></li>
+                            <u>{{ donation.pick_up_date }}, {{ donation.pick_up_time }}</u>
+                        </h3>
+                    </li>
                 {% endfor %}
-            </ul>
-            <h1>Lista przekazanych darów i odebranych ode mnie przez kuriera:</h1>
-            <ul>
             </ul>
         </div>
     </section>

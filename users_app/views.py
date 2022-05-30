@@ -63,14 +63,24 @@ def logout_view(request):
 
 
 def profile_view(request):
-    user = request.user
-    # find donation for specific user
-    donations = DonationModel.objects.filter(user_donator=user)
-    print('DONATIONS: ', donations, flush=True)
-    for donation in donations:
-        print('INSTITUTIONS: ', donation.categories.all(), flush=True)
-    context = {
-        'donations': donations,
-    }
+    if request.method == 'POST':
+        taken_donations_id_list = request.POST.getlist('is_taken')
+        print('ISTAKEN: ', taken_donations_id_list, flush=True)
+        for id_element in taken_donations_id_list:
+            donation = DonationModel.objects.get(pk=int(id_element))
+            donation.is_taken = True
+            donation.save()
 
-    return render(request, 'users_app/profile.html', context=context)
+        return redirect('users_app:profile_view')
+
+    if request.method == 'GET':
+        user = request.user
+        # find donation for specific user
+        donations_not_taken = DonationModel.objects.filter(user_donator=user, is_taken=False)
+        donations_taken = DonationModel.objects.filter(user_donator=user, is_taken=True)
+        context = {
+            'donations_not_taken': donations_not_taken,
+            'donations_taken': donations_taken,
+        }
+
+        return render(request, 'users_app/profile.html', context=context)
