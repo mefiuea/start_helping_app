@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import get_user_model, authenticate, login, logout
 from django.core.exceptions import ObjectDoesNotExist
+from django.contrib.auth.hashers import check_password
 
 from .forms import RegistrationForm, LoginForm, ProfileEditForm
 from donation_app.models import DonationModel
@@ -90,16 +91,44 @@ def profile_settings_view(request):
     if request.method == 'POST':
         form = ProfileEditForm(request.POST or None)
         if form.is_valid():
+            user_instance = request.user
             first_name = form.cleaned_data['first_name']
             last_name = form.cleaned_data['last_name']
             email = form.cleaned_data['email']
-            print('FN: ', first_name, flush=True)
-            print('FN: ', last_name, flush=True)
-            print('FN: ', email, flush=True)
+            password = form.cleaned_data.get('password')
+            if not request.user.check_password(password):
+                context = {
+                    'form': form,
+                    'wrong_password': 'Niepoprawne hasło',
+                }
+                return render(request, 'users_app/profile_settings.html', context=context)
+            # password passed
+            # checking if the email has changed
+            if email == user_instance.email:
+                user_instance.first_name = first_name
+                user_instance.last_name = last_name
+                user_instance.save()
+                return redirect('users_app:profile_view')
+            else:
+                try:
+                    get_user_model().objects.get(email=email)
+                    print('Taki mail jest w bazie danych', flush=True)
+                    context = {
+                        'form': form,
+                        'email_repeat': 'Taki email istnieje już w bazie danych',
+                    }
+                    return render(request, 'users_app/profile_settings.html', context=context)
+                except ObjectDoesNotExist:
+                    print('Takiego maila nie ma w bazie danych', flush=True)
+                    user_instance.first_name = first_name
+                    user_instance.last_name = last_name
+                    user_instance.email = email
+                    user_instance.save()
+                    return redirect('users_app:profile_view')
         else:
             print('Walidacja formularza nie przeszła', flush=True)
-
-        return redirect('users_app:profile_settings_view')
+            context = {'form': form, }
+            return render(request, 'users_app/profile_settings.html', context=context)
 
     if request.method == 'GET':
         form = ProfileEditForm()
@@ -109,3 +138,11 @@ def profile_settings_view(request):
         }
 
         return render(request, 'users_app/profile_settings.html', context=context)
+
+
+def password_reset_view(request):
+    if request.method == 'POST':
+        pass
+
+    if request.method == 'GET':
+        return render(request, 'users_app/password_reset.html')

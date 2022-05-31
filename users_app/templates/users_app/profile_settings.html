@@ -9,15 +9,28 @@
             {% csrf_token %}
             <div class="form-group">
                 <input type="text" name="first_name" placeholder="Imię" value="{{ user.first_name }}"/>
+                <p>{{ form.first_name.errors }}</p>
             </div>
             <div class="form-group">
                 <input type="text" name="last_name" placeholder="Nazwisko" value="{{ user.last_name }}"/>
+                <p>{{ form.last_name.errors }}</p>
             </div>
             <div class="form-group">
                 <input type="email" name="email" placeholder="Email" value="{{ user.email }}"/>
+                <p>{{ form.email.errors }}</p>
                 <p>{{ form.email.help_text }}</p>
+                <p>{{ email_repeat }}</p>
+            </div>
+            <div class="form-group">
+                <input type="password" name="password" placeholder="Hasło"/>
+                <p>{{ form.password.errors }}</p>
+                <p>{{ form.password.help_text }}</p>
+                <p>{{ wrong_password }}</p>
             </div>
             <button class="btn" type="submit">Zapisz</button>
+            <div class="form-group">
+                <h3><a href="{% url 'users_app:password_reset_view' %}">Zresetuj hasło</a></h3>
+            </div>
         </form>
     </section>
 {% endblock %}
