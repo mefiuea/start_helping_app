@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.shortcuts import render, redirect
 from django.contrib.auth import get_user_model, authenticate, login, logout
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
@@ -72,6 +74,7 @@ def profile_view(request):
         for id_element in taken_donations_id_list:
             donation = DonationModel.objects.get(pk=int(id_element))
             donation.is_taken = True
+            donation.is_taken_date = datetime.now()
             donation.save()
 
         return redirect('users_app:profile_view')
@@ -79,8 +82,8 @@ def profile_view(request):
     if request.method == 'GET':
         user = request.user
         # find donation for specific user
-        donations_not_taken = DonationModel.objects.filter(user_donator=user, is_taken=False)
-        donations_taken = DonationModel.objects.filter(user_donator=user, is_taken=True)
+        donations_not_taken = DonationModel.objects.filter(user_donator=user, is_taken=False).order_by('-date_add')
+        donations_taken = DonationModel.objects.filter(user_donator=user, is_taken=True).order_by('-is_taken_date')
         context = {
             'donations_not_taken': donations_not_taken,
             'donations_taken': donations_taken,

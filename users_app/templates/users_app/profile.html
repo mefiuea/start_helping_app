@@ -16,6 +16,7 @@
         <div class="form-group">
             <hr>
             <h1>Lista przekazanych darów:</h1>
+            <p>Sortowanie po dacie wysłania formularza</p>
             <form action="" method="post">
                 {% csrf_token %}
                 <ul>
@@ -28,6 +29,7 @@
                                     {{ category }}{% if forloop.last %}{% else %},{% endif %}
                                 {% endfor %}</u>. Data odbioru:
                                 <u>{{ donation.pick_up_date }}, {{ donation.pick_up_time }}</u>
+                                <p>Data wysłania formularza: {{ donation.date_add }}</p>
                                 Czy dar został ode mnie odebrany przez kuriera? (zaznacz jeżeli tak):
                                 <input type="checkbox" id="" name="is_taken" value="{{ donation.id }}">
                             </h3>
@@ -36,7 +38,11 @@
                 </ul>
                 <button class="btn" type="submit">Zapisz</button>
             </form>
+            <br>
             <h1>Lista przekazanych darów i odebranych ode mnie przez kuriera:</h1>
+            <p>Sortowanie po dacie oznaczenia jako odebrane</p>
+            <br>
+            <br>
             <ul>
                 {% for donation in donations_taken %}
                     <li>
@@ -47,6 +53,7 @@
                                 {{ category }}{% if forloop.last %}{% else %},{% endif %}
                             {% endfor %}</u>. Data odbioru:
                             <u>{{ donation.pick_up_date }}, {{ donation.pick_up_time }}</u>
+                            <p>Data oznaczenia jako zabrane przez kuriera: {{ donation.is_taken_date }}</p>
                         </h3>
                     </li>
                 {% endfor %}
