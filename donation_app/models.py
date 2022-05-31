@@ -57,4 +57,5 @@ class DonationModel(models.Model):
     user_donator = models.ForeignKey(get_user_model(), blank=True, null=True, default=None, on_delete=models.PROTECT,
                                      related_name='donator')
     is_taken = models.BooleanField(default=False, verbose_name='Odebrane?')
+    is_taken_date = models.DateTimeField(null=True)
     date_add = models.DateTimeField(auto_now_add=True)
