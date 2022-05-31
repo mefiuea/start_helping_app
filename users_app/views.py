@@ -1,9 +1,10 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import get_user_model, authenticate, login, logout
-from django.core.exceptions import ObjectDoesNotExist
-from django.contrib.auth.hashers import check_password
+from django.core.exceptions import ObjectDoesNotExist, ValidationError
+from django.contrib.auth.password_validation import validate_password, password_validators_help_texts
+from django.contrib.auth.decorators import login_required
 
-from .forms import RegistrationForm, LoginForm, ProfileEditForm
+from .forms import RegistrationForm, LoginForm, ProfileEditForm, PasswordResetForm
 from donation_app.models import DonationModel
 
 
@@ -63,6 +64,7 @@ def logout_view(request):
     return redirect('home_app:landing_page_view')
 
 
+@login_required
 def profile_view(request):
     if request.method == 'POST':
         taken_donations_id_list = request.POST.getlist('is_taken')
@@ -87,6 +89,7 @@ def profile_view(request):
         return render(request, 'users_app/profile.html', context=context)
 
 
+@login_required
 def profile_settings_view(request):
     if request.method == 'POST':
         form = ProfileEditForm(request.POST or None)
@@ -140,9 +143,57 @@ def profile_settings_view(request):
         return render(request, 'users_app/profile_settings.html', context=context)
 
 
+@login_required
 def password_reset_view(request):
     if request.method == 'POST':
-        pass
+        form = PasswordResetForm(request.POST or None)
+        if form.is_valid():
+            user_instance = request.user
+            old_password = form.cleaned_data.get('old_password')
+            # check if actual password match with user password
+            if not request.user.check_password(old_password):
+                context = {
+                    'form': form,
+                    'password_help_text': password_validators_help_texts(),
+                    'wrong_old_password': 'Niepoprawne aktualne hasło',
+                }
+                return render(request, 'users_app/password_reset.html', context=context)
+            new_password1 = form.cleaned_data.get('new_password1')
+            new_password2 = form.cleaned_data.get('new_password2')
+            if new_password1 and new_password2 and new_password1 != new_password2:
+                context = {
+                    'form': form,
+                    'password_help_text': password_validators_help_texts(),
+                    'passwords_dont_match': 'Nowe hasła nie pasują do siebie'
+                }
+                return render(request, 'users_app/password_reset.html', context=context)
+            # django validators
+            try:
+                validate_password(new_password1, user_instance)
+                # everything's ok - can change password
+                # change user password
+                user_instance.set_password(new_password1)
+                user_instance.save()
+                return render(request, 'users_app/password_reset_confirmation.html')
+            except ValidationError as e:
+                context = {
+                    'form': form,
+                    'password_help_text': password_validators_help_texts(),
+                    'validations_errors': e.messages
+                }
+                return render(request, 'users_app/password_reset.html', context=context)
+        else:
+            print('Walidacja formularza nie przeszła', flush=True)
+            context = {
+                'form': form,
+                'password_help_text': password_validators_help_texts()
+            }
+            return render(request, 'users_app/password_reset.html', context=context)
 
     if request.method == 'GET':
-        return render(request, 'users_app/password_reset.html')
+        form = PasswordResetForm()
+        context = {
+            'form': form,
+            'password_help_text': password_validators_help_texts()
+        }
+        return render(request, 'users_app/password_reset.html', context=context)

@@ -44,3 +44,9 @@ class ProfileEditForm(forms.Form):
                              help_text='Email musi być unikalny i w formie X@Y.pl/com...')
     password = forms.CharField(label=_('password'), help_text='Wprowadź swoje aktualne hasło żeby zmienić dane',
                                widget=PasswordInput())
+
+
+class PasswordResetForm(forms.Form):
+    old_password = forms.CharField(label=_('password'), help_text='Wprowadź stare hasło', widget=PasswordInput())
+    new_password1 = forms.CharField(label=_('password'), help_text='Wprowadź nowe hasło', widget=PasswordInput())
+    new_password2 = forms.CharField(label=_('password'), help_text='Powtórz nowe hasło', widget=PasswordInput())

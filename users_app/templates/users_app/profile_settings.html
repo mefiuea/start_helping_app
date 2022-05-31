@@ -27,7 +27,9 @@
                 <p>{{ form.password.help_text }}</p>
                 <p>{{ wrong_password }}</p>
             </div>
-            <button class="btn" type="submit">Zapisz</button>
+            <div class="form-group">
+                <button class="btn" type="submit">Zapisz</button>
+            </div>
             <div class="form-group">
                 <h3><a href="{% url 'users_app:password_reset_view' %}">Zresetuj hasło</a></h3>
             </div>

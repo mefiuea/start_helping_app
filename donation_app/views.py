@@ -96,6 +96,7 @@ def add_donation_view(request):
         return render(request, 'donation_app/form.html', context=context)
 
 
+@login_required
 def get_institutions_by_id(request):
     institutions_list = []
     type_ids_int = []
