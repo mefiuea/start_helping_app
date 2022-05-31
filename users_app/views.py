@@ -21,6 +21,7 @@ def register_view(request):
             print('PRINT: Użytkownik utworzony!!!!', user, flush=True)
             return redirect('users_app:login_view')
         else:
+            print('Walidacja formularza nie przeszła', flush=True)
             context = {'form': form, }
             return render(request, 'users_app/register.html', context=context)
 

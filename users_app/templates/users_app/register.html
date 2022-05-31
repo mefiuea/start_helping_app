@@ -9,25 +9,27 @@
             {% csrf_token %}
             <div class="form-group">
                 <input type="text" name="first_name" placeholder="Imię"/>
-                    <p>{{ form.first_name.errors }}</p>
+                <p>{{ form.first_name.errors }}</p>
             </div>
             <div class="form-group">
                 <input type="text" name="last_name" placeholder="Nazwisko"/>
-                    <p>{{ form.last_name.errors }}</p>
+                <p>{{ form.last_name.errors }}</p>
             </div>
             <div class="form-group">
                 <input type="email" name="email" placeholder="Email"/>
-                    <p>{{ form.email.errors }}</p>
-                    <p>{{ form.email.help_text }}</p>
+                {% if form.email.errors %}
+                    <p>Istnieje już użytkownik z takim adresem email.</p>
+                {% endif %}
+                <p>{{ form.email.help_text }}</p>
             </div>
             <div class="form-group">
                 <input type="password" name="password1" placeholder="Hasło"/>
-                    <p>{{ form.password1.errors }}</p>
-                    <p>{{ form.password1.help_text }}</p>
+                <p>{{ form.password1.errors }}</p>
+                <p>{{ form.password1.help_text }}</p>
             </div>
             <div class="form-group">
                 <input type="password" name="password2" placeholder="Powtórz hasło"/>
-                    <p>{{ form.password1.errors }}</p>
+                <p>{{ form.password2.errors }}</p>
             </div>
 
             <div class="form-group form-group--buttons">
