@@ -1,0 +1,3 @@
+Witaj {{ user.first_name }}.
+Użyj linku poniżej, żeby aktywować konto.
+{{ domain }}{% url 'users_app:activate_user_view' uidb64=uid token=token %}

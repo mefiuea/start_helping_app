@@ -5,6 +5,9 @@
 {% block content %}
     <section class="login-page">
         <h2>Załóż konto</h2>
+        {% if email_sent %}
+            <h3>{{ email_sent }}</h3>
+        {% endif %}
         <form method="post">
             {% csrf_token %}
             <div class="form-group">
@@ -20,12 +23,16 @@
                 {% if form.email.errors %}
                     <p>Istnieje już użytkownik z takim adresem email.</p>
                 {% endif %}
-                <p>{{ form.email.help_text }}</p>
+                {% if not email_sent %}
+                    <p>{{ form.email.help_text }}</p>
+                {% endif %}
             </div>
             <div class="form-group">
                 <input type="password" name="password1" placeholder="Hasło"/>
                 <p>{{ form.password1.errors }}</p>
-                <p>{{ form.password1.help_text }}</p>
+                {% if not email_sent %}
+                    <p>{{ form.password1.help_text }}</p>
+                {% endif %}
             </div>
             <div class="form-group">
                 <input type="password" name="password2" placeholder="Powtórz hasło"/>

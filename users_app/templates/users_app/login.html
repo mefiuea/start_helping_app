@@ -5,6 +5,9 @@
 {% block content %}
     <section class="login-page">
         <h2>Zaloguj się</h2>
+        {% if user_is_active_now %}
+            <h3>{{ user_is_active_now }}</h3>
+        {% endif %}
         <form method="post">
             {% csrf_token %}
             <div class="form-group">
@@ -25,5 +28,6 @@
             </div>
         </form>
         {{ form.non_field_errors }}
+        {{ user_is_not_active }}
     </section>
 {% endblock %}

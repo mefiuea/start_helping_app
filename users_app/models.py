@@ -43,6 +43,7 @@ class MyUser(AbstractBaseUser, PermissionsMixin):
     first_name = models.CharField(max_length=30, unique=False, verbose_name='first name')
     last_name = models.CharField(max_length=30, unique=False, verbose_name='last name')
     email = models.EmailField(max_length=100, unique=True, verbose_name='email')
+    is_email_verified = models.BooleanField(default=False)
     date_joined = models.DateTimeField(verbose_name='date joined', auto_now_add=True)
     last_login = models.DateTimeField(verbose_name='last login', auto_now=True)
     is_admin = models.BooleanField(default=False)

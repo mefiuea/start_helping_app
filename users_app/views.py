@@ -1,14 +1,37 @@
 import threading
 from datetime import datetime
 
+from django.contrib import messages
 from django.shortcuts import render, redirect
 from django.contrib.auth import get_user_model, authenticate, login, logout
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.contrib.auth.password_validation import validate_password, password_validators_help_texts
 from django.contrib.auth.decorators import login_required
+from django.core.mail import send_mail, EmailMessage
+from django.conf import settings
+from django.contrib.sites.shortcuts import get_current_site
+from django.template.loader import render_to_string
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.utils.encoding import force_bytes, force_str, DjangoUnicodeDecodeError
 
 from .forms import RegistrationForm, LoginForm, ProfileEditForm, PasswordResetForm
 from donation_app.models import DonationModel
+from .utils import generate_token
+
+
+def send_activation_email(user, request):
+    current_site = get_current_site(request)
+    email_subject = 'Aktywuj swoje konto w aplikacji do pomagania!'
+    context = {
+        'user': user,
+        'domain': current_site,
+        'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+        'token': generate_token.make_token(user)
+    }
+    email_body = render_to_string('users_app/activate_email.html', context=context)
+
+    email = EmailMessage(subject=email_subject, body=email_body, from_email=settings.EMAIL_HOST_USER, to=[user.email])
+    email.send()
 
 
 def register_view(request):
@@ -17,9 +40,17 @@ def register_view(request):
         if form.is_valid():
             user = form.save(commit=False)
             user.is_active = True
+            user.is_email_verified = False
             user.save()
             print('PRINT: Użytkownik utworzony!!!!', user, flush=True)
-            return redirect('users_app:login_view')
+
+            send_activation_email(user, request)
+
+            context = {
+                'form': form,
+                'email_sent': 'Na Twój adres email został wysłany mail z linkiem aktywacyjnym.'
+            }
+            return render(request, 'users_app/register.html', context=context)
         else:
             print('Walidacja formularza nie przeszła', flush=True)
             context = {'form': form, }
@@ -35,6 +66,13 @@ def login_view(request):
             username = form.cleaned_data.get('username')
             password = form.cleaned_data.get('password')
             user = authenticate(request, email=username, password=password)
+
+            if not user.is_email_verified:
+                context = {
+                    'user_is_not_active': 'Twoje konto nie jest zweryfikowane przez email.',
+                }
+                return render(request, 'users_app/login.html', context=context)
+
             if user is not None:
                 if user.is_active:
                     login(request, user)
@@ -202,3 +240,27 @@ def password_reset_view(request):
             'password_help_text': password_validators_help_texts()
         }
         return render(request, 'users_app/password_reset.html', context=context)
+
+
+def activate_user_view(request, uidb64, token):
+    try:
+        uid = force_str(urlsafe_base64_decode(uidb64))
+        user = get_user_model().objects.get(pk=uid)
+
+    except Exception as e:
+        user = None
+
+    if user and generate_token.check_token(user, token):
+        user.is_email_verified = True
+        user.is_active = True
+        user.save()
+        # context = {
+        #     'user_is_active_now': 'Twoje konto jest już aktywne.',
+        # }
+        # return render(request, 'users_app/login.html', context=context)
+        return redirect('users_app:login_view')
+    else:
+        context = {
+            'user': user,
+        }
+        return render(request, 'users_app/activate_failed.html', context=context)
