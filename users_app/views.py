@@ -14,7 +14,7 @@ from django.template.loader import render_to_string
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str, DjangoUnicodeDecodeError
 
-from .forms import RegistrationForm, LoginForm, ProfileEditForm, PasswordResetForm
+from .forms import RegistrationForm, LoginForm, ProfileEditForm, PasswordResetForm, PasswordEmailForm
 from donation_app.models import DonationModel
 from .utils import generate_token
 
@@ -281,3 +281,31 @@ def activate_user_view(request, uidb64, token):
             'user': user,
         }
         return render(request, 'users_app/activate_failed.html', context=context)
+
+
+def password_reset_by_email(request):
+    if request.method == 'POST':
+        form = PasswordEmailForm(request.POST or None)
+        if form.is_valid():
+            user_instance = request.user
+            email = form.cleaned_data.get('email')
+            current_user_model = get_user_model()
+            # check if email exists in database
+            try:
+                current_user_model.objects.get(email=email)
+                print('Taki mail jest w bazie danych', flush=True)
+                return render(request, 'users_app/password_reset_email.html')
+            except ObjectDoesNotExist:
+                print('Takiego maila nie ma w bazie danych', flush=True)
+                context = {
+                    'email_does_not_exist_in_db': 'Taki email nie istnieje w bazie danych.'
+                }
+                return render(request, 'users_app/password_reset_email.html', context=context)
+        else:
+            print('Walidacja formularza nie przeszła', flush=True)
+            context = {'form': form, }
+            return render(request, 'users_app/password_reset_email.html', context=context)
+
+    if request.method == 'GET':
+
+        return render(request, 'users_app/password_reset_email.html')

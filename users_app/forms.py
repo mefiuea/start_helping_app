@@ -50,3 +50,8 @@ class PasswordResetForm(forms.Form):
     old_password = forms.CharField(label=_('password'), help_text='Wprowadź stare hasło', widget=PasswordInput())
     new_password1 = forms.CharField(label=_('password'), help_text='Wprowadź nowe hasło', widget=PasswordInput())
     new_password2 = forms.CharField(label=_('password'), help_text='Powtórz nowe hasło', widget=PasswordInput())
+
+
+class PasswordEmailForm(forms.Form):
+    email = forms.EmailField(max_length=100, label=_('email'),
+                             help_text='Email musi być unikalny i w formie X@Y.pl/com...')
