@@ -19,6 +19,19 @@ from donation_app.models import DonationModel
 from .utils import generate_token
 
 
+class EmailThread(threading.Thread):
+    def __init__(self, subject, body, from_email, to):
+        self.subject = subject
+        self.body = body
+        self.from_email = from_email
+        self.to = (to,)
+        threading.Thread.__init__(self)
+
+    def run(self):
+        msg = EmailMessage(subject=self.subject, body=self.body, from_email=self.from_email, to=self.to)
+        msg.send()
+
+
 def send_activation_email(user, request):
     current_site = get_current_site(request)
     email_subject = 'Aktywuj swoje konto w aplikacji do pomagania!'
@@ -30,8 +43,12 @@ def send_activation_email(user, request):
     }
     email_body = render_to_string('users_app/activate_email.html', context=context)
 
-    email = EmailMessage(subject=email_subject, body=email_body, from_email=settings.EMAIL_HOST_USER, to=[user.email])
-    email.send()
+    # send email synchronous
+    # email = EmailMessage(subject=email_subject, body=email_body, from_email=settings.EMAIL_HOST_USER, to=[user.email])
+    # email.send()
+
+    # send email asynchronous
+    EmailThread(subject=email_subject, body=email_body, from_email=settings.EMAIL_HOST_USER, to=user.email).start()
 
 
 def register_view(request):
