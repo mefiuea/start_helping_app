@@ -14,7 +14,8 @@ from django.template.loader import render_to_string
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str, DjangoUnicodeDecodeError
 
-from .forms import RegistrationForm, LoginForm, ProfileEditForm, PasswordResetForm, PasswordEmailForm
+from .forms import RegistrationForm, LoginForm, ProfileEditForm, PasswordResetForm, PasswordEmailForm, \
+    PasswordResetByEmailForm
 from donation_app.models import DonationModel
 from .utils import generate_token
 
@@ -279,7 +280,7 @@ def activate_user_view(request, uidb64, token):
         uid = force_str(urlsafe_base64_decode(uidb64))
         user = get_user_model().objects.get(pk=uid)
 
-    except Exception as e:
+    except ObjectDoesNotExist:
         user = None
 
     if user and generate_token.check_token(user, token):
@@ -307,10 +308,19 @@ def password_reset_by_email(request):
             current_user_model = get_user_model()
             # check if email exists in database
             try:
-                current_user_model.objects.get(email=email)
+                user = current_user_model.objects.get(email=email)
                 print('Taki mail jest w bazie danych', flush=True)
 
-                return render(request, 'users_app/password_reset_email.html')
+                user.is_email_verified = False
+                user.save()
+                send_password_reset_email(user, request)
+
+                context = {
+                    'form': form,
+                    'email_sent': 'Na Twój adres email został wysłany mail z linkiem do formularza zmiany hasła.'
+                }
+
+                return render(request, 'users_app/password_reset_email.html', context=context)
             except ObjectDoesNotExist:
                 print('Takiego maila nie ma w bazie danych', flush=True)
                 context = {
@@ -326,9 +336,70 @@ def password_reset_by_email(request):
         return render(request, 'users_app/password_reset_email.html')
 
 
-def password_reset_by_email_changing_form(request):
+def password_reset_by_email_changing_form_view(request, uidb64, token):
     if request.method == 'POST':
-        pass
+        form = PasswordResetByEmailForm(request.POST or None)
+        if form.is_valid():
+            uid = force_str(urlsafe_base64_decode(uidb64))
+            user = get_user_model().objects.get(pk=uid)
+            new_password1 = form.cleaned_data.get('new_password1')
+            new_password2 = form.cleaned_data.get('new_password2')
+            if new_password1 and new_password2 and new_password1 != new_password2:
+                context = {
+                    'form': form,
+                    'password_help_text': password_validators_help_texts(),
+                    'passwords_dont_match': 'Nowe hasła nie pasują do siebie'
+                }
+                return render(request, 'users_app/password_reset_by_email_form.html', context=context)
+            # django validators
+            try:
+                validate_password(new_password1, user)
+                # everything's ok - can change password
+                # change user password
+                user.set_password(new_password1)
+                user.save()
+                return render(request, 'users_app/password_reset_by_email_form_confirmation.html')
+            except ValidationError as e:
+                context = {
+                    'form': form,
+                    'password_help_text': password_validators_help_texts(),
+                    'validations_errors': e.messages
+                }
+                return render(request, 'users_app/password_reset_by_email_form.html', context=context)
+
+        else:
+            print('Walidacja formularza nie przeszła', flush=True)
+            context = {
+                'form': form,
+                'password_help_text': password_validators_help_texts()
+            }
+            return render(request, 'users_app/password_reset_by_email_form.html', context=context)
 
     if request.method == 'GET':
-        return render(request, 'users_app/password_reset_by_email_form.html')
+        try:
+            uid = force_str(urlsafe_base64_decode(uidb64))
+            # print('UID: ', uid, flush=True)
+            user = get_user_model().objects.get(pk=uid)
+            # print('USER: ', user, flush=True)
+            print('LINIA 385 CHECK TOKEN2 w TRY: ', generate_token.check_token(user, token), flush=True)
+
+        except ObjectDoesNotExist:
+            user = None
+
+        if user and generate_token.check_token(user, token):
+            # ok
+            user.is_email_verified = True
+            user.save()
+            print('LINIA 395 WEWNATRZ IF: ', flush=True)
+            context = {
+                'password_help_text': password_validators_help_texts()
+            }
+
+            return render(request, 'users_app/password_reset_by_email_form.html', context=context)
+        else:
+            print('LINIA 402 WEWNATRZ ELSE: ', flush=True)
+            print('LINIA 403 CHECK TOKEN2: ', generate_token.check_token(user, token), flush=True)
+            context = {
+                'user': user,
+            }
+            return render(request, 'users_app/password_reset_by_email_form_failed.html', context=context)
