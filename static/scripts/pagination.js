@@ -1,8 +1,8 @@
 window.addEventListener('DOMContentLoaded', (event) => {
     console.log('DOM fully loaded and parsed');
-    let actual_page_foundations = 1
-    let actual_page_organizations = 1
-    let actual_page_local_collections = 1
+    let actual_page_foundations = 0
+    let actual_page_organizations = 0
+    let actual_page_local_collections = 0
     console.log('actual page foundations = ' + actual_page_foundations)
     console.log('actual page organizations = ' + actual_page_organizations)
     console.log('actual page local collections = ' + actual_page_local_collections)
@@ -24,7 +24,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
 
     function prev_foundations() {
-        if (actual_page_foundations > 1) {
+        if (actual_page_foundations > 0) {
             actual_page_foundations -= 1
         }
         get_foundations()
@@ -52,7 +52,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
 
     function prev_organizations() {
-        if (actual_page_organizations > 1) {
+        if (actual_page_organizations > 0) {
             actual_page_organizations -= 1
         }
         get_organizations()
@@ -80,7 +80,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
 
     function prev_local_collections() {
-        if (actual_page_local_collections > 1) {
+        if (actual_page_local_collections > 0) {
             actual_page_local_collections -= 1
         }
         get_local_collections()

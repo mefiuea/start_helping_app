@@ -1,1 +1,16 @@
-Numer strony lokalnych zbiórek: {{ page_number }}
+{% for local_collection in local_collections %}
+    <li>
+        <div class="col">
+            <div class="title">{{ local_collection.name }}</div>
+            <div class="subtitle">{{ local_collection.description }}</div>
+        </div>
+
+        <div class="col">
+            <div class="text">
+                {% for category in local_collection.categories.all %}
+                    {{ category.name }}{% if forloop.last %}{% else %},{% endif %}
+                {% endfor %}
+            </div>
+        </div>
+    </li>
+{% endfor %}

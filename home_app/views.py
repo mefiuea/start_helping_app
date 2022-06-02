@@ -1,11 +1,10 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
-from donation_app.models import DonationModel, InstitutionModel
 from django.core.paginator import Paginator
 from django.conf import settings
 from django.contrib.auth import get_user_model
 
-from donation_app.models import Type
+from donation_app.models import DonationModel, InstitutionModel, Type
 from .forms import ContactForm
 from users_app.views import EmailThread
 
@@ -25,10 +24,10 @@ def landing_page_view(request):
         foundations = InstitutionModel.objects.filter(type=Type.F).order_by('id')
 
         # load non-governmental organizations from database
-        organizations = InstitutionModel.objects.filter(type=Type.OP)
+        organizations = InstitutionModel.objects.filter(type=Type.OP).order_by('id')
 
         # load local collections from database
-        local_collections = InstitutionModel.objects.filter(type=Type.ZL)
+        local_collections = InstitutionModel.objects.filter(type=Type.ZL).order_by('id')
 
         context = {
             'sum_of_bags': sum_quantity_bags,
@@ -76,19 +75,35 @@ def contact_form_view(request):
 
 def get_foundations_by_page(request):
     page_number = request.GET.get('page')
-    print('PAGE NUMBER: ', page_number, flush=True)
+    print('PAGE NUMBER FOUNDATIONS: ', page_number, flush=True)
+
+    if int(page_number) == 0:
+        foundations = InstitutionModel.objects.filter(type=Type.F).order_by('id')[0:5]
+    else:
+        foundations = InstitutionModel.objects.filter(type=Type.F).order_by('id')[
+                      int(page_number) * 5:(int(page_number) * 5) + 5]
+
     context = {
         'page_number': page_number,
+        'foundations': foundations,
     }
 
-    return render(request, 'home_app/institutions.html', context=context)
+    return render(request, 'home_app/foundations.html', context=context)
 
 
 def get_organizations_by_page(request):
     page_number = request.GET.get('page')
-    print('PAGE NUMBER: ', page_number, flush=True)
+    print('PAGE NUMBER ORGANIZATIONS: ', page_number, flush=True)
+
+    if int(page_number) == 0:
+        organizations = InstitutionModel.objects.filter(type=Type.OP).order_by('id')[0:5]
+    else:
+        organizations = InstitutionModel.objects.filter(type=Type.OP).order_by('id')[
+                        int(page_number) * 5:(int(page_number) * 5) + 5]
+
     context = {
         'page_number': page_number,
+        'organizations': organizations,
     }
 
     return render(request, 'home_app/organizations.html', context=context)
@@ -96,9 +111,17 @@ def get_organizations_by_page(request):
 
 def get_local_collections_by_page(request):
     page_number = request.GET.get('page')
-    print('PAGE NUMBER: ', page_number, flush=True)
+    print('PAGE NUMBER LOCAL COLLECTIONS: ', page_number, flush=True)
+
+    if int(page_number) == 0:
+        local_collections = InstitutionModel.objects.filter(type=Type.ZL).order_by('id')[0:5]
+    else:
+        local_collections = InstitutionModel.objects.filter(type=Type.ZL).order_by('id')[
+                            int(page_number) * 5:(int(page_number) * 5) + 5]
+
     context = {
         'page_number': page_number,
+        'local_collections': local_collections,
     }
 
     return render(request, 'home_app/local_collections.html', context=context)
