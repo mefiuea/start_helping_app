@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from donation_app.models import DonationModel, InstitutionModel
 from django.core.paginator import Paginator
@@ -29,22 +30,12 @@ def landing_page_view(request):
         # load local collections from database
         local_collections = InstitutionModel.objects.filter(type=Type.ZL)
 
-        # setting Pagination for foundations
-        paginator_instance = Paginator(foundations, 5)
-        page = request.GET.get('page')
-        foundations_paginator_instance = paginator_instance.get_page(page)
-
-        # setting Pagination for non-governmental organizations
-        paginator_instance2 = Paginator(organizations, 5)
-        page2 = request.GET.get('page2')
-        organizations_paginator_instance = paginator_instance2.get_page(page2)
-
         context = {
             'sum_of_bags': sum_quantity_bags,
             'number_of_institutions': number_of_institutions,
-            'foundations': foundations_paginator_instance,
-            'organizations': organizations_paginator_instance,
-            'local_collections': local_collections,
+            'foundations': foundations[0:5],
+            'organizations': organizations[0:5],
+            'local_collections': local_collections[0:5],
         }
 
         return render(request, 'home_app/landing_page.html', context=context)
@@ -81,3 +72,33 @@ def contact_form_view(request):
             }
 
             return render(request, 'home_app/contact_form_message_sent_fail.html', context=context)
+
+
+def get_foundations_by_page(request):
+    page_number = request.GET.get('page')
+    print('PAGE NUMBER: ', page_number, flush=True)
+    context = {
+        'page_number': page_number,
+    }
+
+    return render(request, 'home_app/institutions.html', context=context)
+
+
+def get_organizations_by_page(request):
+    page_number = request.GET.get('page')
+    print('PAGE NUMBER: ', page_number, flush=True)
+    context = {
+        'page_number': page_number,
+    }
+
+    return render(request, 'home_app/organizations.html', context=context)
+
+
+def get_local_collections_by_page(request):
+    page_number = request.GET.get('page')
+    print('PAGE NUMBER: ', page_number, flush=True)
+    context = {
+        'page_number': page_number,
+    }
+
+    return render(request, 'home_app/local_collections.html', context=context)

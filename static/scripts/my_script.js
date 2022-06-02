@@ -84,8 +84,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
         next_button.click(form_summary);
         let submit_button = $('#submit-form-button');
         submit_button.click(submit_form);
-        let foundation_page_button = $('#institution-page-button');
-        foundation_page_button.click(next_page);
+        // let foundation_page_button = $('#institution-page-button');
+        // foundation_page_button.click(next_page);
     });
 
     // const checkButton = document.getElementById('cb');

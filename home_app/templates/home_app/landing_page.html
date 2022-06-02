@@ -89,7 +89,7 @@
             <p>W naszej bazie znajdziesz listę zweryfikowanych Fundacji, z którymi współpracujemy.
                 Możesz sprawdzić czym się zajmują, komu pomagają i czego potrzebują.
             </p>
-            <ul class="help--slides-items">
+            <ul class="help--slides-items" id="ins-pag">
                 {% for foundation in foundations %}
                     <li>
                         <div class="col">
@@ -108,27 +108,17 @@
             </ul>
             {#Pagination#}
             <ul class="help--slides-pagination">
-                {% if foundations.has_previous %}
-                    <li><a href="?page=1#help"
-                           class="btn btn--small btn--without-border active" id="institution-page-button">&laquo;</a>
-                    </li>
-                    <li><a href="?page={{ foundations.previous_page_number }}#help"
-                           class="btn btn--small btn--without-border" id="institution-page-button">Poprzednia strona</a>
-                    </li>
-                {% endif %}
-
-                {% if foundations.has_next %}
-                    <li><a href="?page={{ foundations.next_page_number }}#help"
-                           class="btn btn--small btn--without-border" id="institution-page-button">Następna strona</a>
-                    </li>
-                    <li><a href="?page={{ foundations.paginator.num_pages }}#help"
-                           class="btn btn--small btn--without-border active" id="institution-page-button">&raquo;</a>
-                    </li>
-                {% endif %}
+                <li>
+                    <div class="btn btn--small btn--without-border active" id="pag-prev-s1">
+                        &laquo; Poprzednia strona
+                    </div>
+                </li>
+                <li>
+                    <div class="btn btn--small btn--without-border active" id="pag-next-s1">
+                        Następna strona &raquo;
+                    </div>
+                </li>
             </ul>
-            <div class="help--slides-pagination">
-                {{ foundations.number }} z {{ foundations.paginator.num_pages }}
-            </div>
         </div>
 
 
@@ -138,7 +128,7 @@
                 W naszej bazie znajdziesz listę zweryfikowanych Organizacji Pozarządowych, z którymi współpracujemy.
                 Możesz sprawdzić czym się zajmują, komu pomagają i czego potrzebują.
             </p>
-            <ul class="help--slides-items">
+            <ul class="help--slides-items" id="org-pag">
                 {% for organization in organizations %}
                     <li>
                         <div class="col">
@@ -158,24 +148,18 @@
             </ul>
 
             {#Pagination#}
-                        <ul class="help--slides-pagination">
-                            {% if organizations.has_previous %}
-                                <li><a href="?page2=1#help"
-                                       class="btn btn--small btn--without-border active">&laquo;</a></li>
-                                <li><a href="?page2={{ organizations.previous_page_number }}#help"
-                                       class="btn btn--small btn--without-border">Poprzednia strona</a></li>
-                            {% endif %}
-
-                            {% if organizations.has_next %}
-                                <li><a href="?page2={{ organizations.next_page_number }}#help"
-                                       class="btn btn--small btn--without-border">Następna strona</a></li>
-                                <li><a href="?page2={{ organizations.paginator.num_pages }}#help"
-                                       class="btn btn--small btn--without-border active">&raquo;</a></li>
-                            {% endif %}
-                        </ul>
-                        <div class="help--slides-pagination">
-                            {{ organizations.number }} z {{ organizations.paginator.num_pages }}
-                        </div>
+            <ul class="help--slides-pagination">
+                <li>
+                    <div class="btn btn--small btn--without-border active" id="pag-prev-s2">
+                        &laquo; Poprzednia strona
+                    </div>
+                </li>
+                <li>
+                    <div class="btn btn--small btn--without-border active" id="pag-next-s2">
+                        Następna strona &raquo;
+                    </div>
+                </li>
+            </ul>
         </div>
 
         <!-- SLIDE 3 -->
@@ -183,7 +167,7 @@
             <p>W naszej bazie znajdziesz listę zweryfikowanych Zbiórek lokalnych, z którymi współpracujemy.
                 Możesz sprawdzić czym się zajmują, komu pomagają i czego potrzebują.
             </p>
-            <ul class="help--slides-items">
+            <ul class="help--slides-items" id="loc-pag">
                 {% for local_collection in local_collections %}
                     <li>
                         <div class="col">
@@ -202,12 +186,19 @@
                 {% endfor %}
             </ul>
 
-            <!-- Pagination
-			<ul class="help--slides-pagination">
-			  <li><a href="#" class="btn btn--small btn--without-border active" data-page="1">1</a></li>
-			  <li><a href="#" class="btn btn--small btn--without-border" data-page="2">2</a></li>
-			</ul>
-			-->
+            <!-- Pagination-->
+            <ul class="help--slides-pagination">
+                <li>
+                    <div class="btn btn--small btn--without-border active" id="pag-prev-s3">
+                        &laquo; Poprzednia strona
+                    </div>
+                </li>
+                <li>
+                    <div class="btn btn--small btn--without-border active" id="pag-next-s3">
+                        Następna strona &raquo;
+                    </div>
+                </li>
+            </ul>
         </div>
     </section>
 {% endblock %}
