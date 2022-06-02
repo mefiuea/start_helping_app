@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Błąd{% endblock %}
+{% block content %}
+    <section class="login-page">
+        <h2>Popraw formularz kontaktowy i wyślij jeszcze raz</h2>
+        <div class="form-group">
+            {% if form.first_name.errors %}
+                <p>{{ form.first_name.label }} {{ form.first_name.errors }}</p>
+            {% endif %}
+            {% if form.last_name.errors %}
+                <p>{{ form.last_name.label }} {{ form.last_name.errors }}</p>
+            {% endif %}
+            {% if form.message.errors %}
+                <p>{{ form.message.label }} {{ form.message.errors }}</p>
+            {% endif %}
+        </div>
+    </section>
+{% endblock %}

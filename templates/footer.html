@@ -4,11 +4,11 @@
     <div id="contact" class="contact">
         <h2>Skontaktuj się z nami</h2>
         <h3>Formularz kontaktowy</h3>
-        <form class="form--contact">
-            <div class="form-group form-group--50"><input type="text" name="name" placeholder="Imię"/></div>
-            <div class="form-group form-group--50"><input type="text" name="surname" placeholder="Nazwisko"/></div>
-
-            <div class="form-group"><textarea name="message" placeholder="Wiadomość" rows="1"></textarea></div>
+        <form class="form--contact" action="{% url 'home_app:contact_form_view' %}" method="post">
+            {% csrf_token %}
+            <div class="form-group form-group--50"><input type="text" name="first_name" placeholder="Imię (maks 30 znaków)"/></div>
+            <div class="form-group form-group--50"><input type="text" name="last_name" placeholder="Nazwisko (maks 30 znaków)"/></div>
+            <div class="form-group"><textarea name="message" placeholder="Wiadomość (maks 400 znaków)" rows="1"></textarea></div>
 
             <button class="btn" type="submit">Wyślij</button>
         </form>

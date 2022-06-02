@@ -25,7 +25,7 @@ class EmailThread(threading.Thread):
         self.subject = subject
         self.body = body
         self.from_email = from_email
-        self.to = (to,)
+        self.to = to
         threading.Thread.__init__(self)
 
     def run(self):
@@ -49,7 +49,7 @@ def send_activation_email(user, request):
     # email.send()
 
     # send email asynchronous
-    EmailThread(subject=email_subject, body=email_body, from_email=settings.EMAIL_HOST_USER, to=user.email).start()
+    EmailThread(subject=email_subject, body=email_body, from_email=settings.EMAIL_HOST_USER, to=(user.email,)).start()
 
 
 def send_password_reset_email(user, request):
@@ -64,7 +64,7 @@ def send_password_reset_email(user, request):
     email_body = render_to_string('users_app/password_reset_email_link.html', context=context)
 
     # send email asynchronous
-    EmailThread(subject=email_subject, body=email_body, from_email=settings.EMAIL_HOST_USER, to=user.email).start()
+    EmailThread(subject=email_subject, body=email_body, from_email=settings.EMAIL_HOST_USER, to=(user.email,)).start()
 
 
 def register_view(request):
