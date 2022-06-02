@@ -51,6 +51,21 @@ def send_activation_email(user, request):
     EmailThread(subject=email_subject, body=email_body, from_email=settings.EMAIL_HOST_USER, to=user.email).start()
 
 
+def send_password_reset_email(user, request):
+    current_site = get_current_site(request)
+    email_subject = 'Link do zresetowania hasła w aplikacji do pomagania!'
+    context = {
+        'user': user,
+        'domain': current_site,
+        'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+        'token': generate_token.make_token(user)
+    }
+    email_body = render_to_string('users_app/password_reset_email_link.html', context=context)
+
+    # send email asynchronous
+    EmailThread(subject=email_subject, body=email_body, from_email=settings.EMAIL_HOST_USER, to=user.email).start()
+
+
 def register_view(request):
     form = RegistrationForm(request.POST or None)
     if request.method == 'POST':
@@ -294,6 +309,7 @@ def password_reset_by_email(request):
             try:
                 current_user_model.objects.get(email=email)
                 print('Taki mail jest w bazie danych', flush=True)
+
                 return render(request, 'users_app/password_reset_email.html')
             except ObjectDoesNotExist:
                 print('Takiego maila nie ma w bazie danych', flush=True)
@@ -307,5 +323,12 @@ def password_reset_by_email(request):
             return render(request, 'users_app/password_reset_email.html', context=context)
 
     if request.method == 'GET':
-
         return render(request, 'users_app/password_reset_email.html')
+
+
+def password_reset_by_email_changing_form(request):
+    if request.method == 'POST':
+        pass
+
+    if request.method == 'GET':
+        return render(request, 'users_app/password_reset_by_email_form.html')
