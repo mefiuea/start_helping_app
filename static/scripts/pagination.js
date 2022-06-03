@@ -16,23 +16,32 @@ window.addEventListener('DOMContentLoaded', (event) => {
         let zmienna = fetch(address).then(function (response) {
             return response.text();
         }).then(function (data) {
-            console.log(data)
-            console.log(document.getElementById('ins-pag').innerHTML)
+            // console.log(data)
+            // console.log(document.getElementById('ins-pag').innerHTML)
             return document.getElementById('ins-pag').innerHTML = data;
         })
+        let page_from_html = document.getElementById('foundations-actual-page-number').innerText =
+            parseInt(actual_page_foundations) + 1
     }
 
 
     function prev_foundations() {
         if (actual_page_foundations > 0) {
-            actual_page_foundations -= 1
+            actual_page_foundations -= 1;
         }
-        get_foundations()
+        get_foundations();
     }
 
     function next_foundations() {
-        actual_page_foundations += 1
-        get_foundations()
+        // get number of all foundations
+        let foundations_count = document.getElementById('foundations-count').value;
+        console.log(foundations_count);
+        let foundations_max_page_number = document.getElementById('foundations-max-page-number').innerText;
+        console.log('foundations max page number = ' + foundations_max_page_number)
+        if (actual_page_foundations < foundations_max_page_number - 1) {
+            actual_page_foundations += 1;
+        }
+        get_foundations();
     }
 
     // organizations pagination
@@ -48,6 +57,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
             console.log(document.getElementById('org-pag').innerHTML)
             return document.getElementById('org-pag').innerHTML = data;
         })
+        let page_from_html = document.getElementById('organizations-actual-page-number').innerText =
+            parseInt(actual_page_organizations) + 1
     }
 
 
@@ -59,7 +70,14 @@ window.addEventListener('DOMContentLoaded', (event) => {
     }
 
     function next_organizations() {
-        actual_page_organizations += 1
+        // get number of all organizations
+        let organizations_count = document.getElementById('organizations-count').value;
+        console.log(organizations_count);
+        let organizations_max_page_number = document.getElementById('organizations-max-page-number').innerText;
+        console.log('organizations max page number = ' + organizations_max_page_number)
+        if (actual_page_organizations < organizations_max_page_number - 1) {
+            actual_page_organizations += 1;
+        }
         get_organizations()
     }
 
@@ -76,6 +94,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
             console.log(document.getElementById('loc-pag').innerHTML)
             return document.getElementById('loc-pag').innerHTML = data;
         })
+        let page_from_html = document.getElementById('local-collections-actual-page-number').innerText =
+            parseInt(actual_page_local_collections) + 1
     }
 
 
@@ -87,13 +107,20 @@ window.addEventListener('DOMContentLoaded', (event) => {
     }
 
     function next_local_collections() {
-        actual_page_local_collections += 1
+        // get number of all local collections
+        let local_collections_count = document.getElementById('local-collections-count').value;
+        console.log(local_collections_count);
+        let local_collections_max_page_number = document.getElementById('local-collections-max-page-number').innerText;
+        console.log('local collections max page number = ' + local_collections_max_page_number)
+        if (actual_page_local_collections < local_collections_max_page_number - 1) {
+            actual_page_local_collections += 1;
+        }
         get_local_collections()
     }
 
 
     $(document).ready(function () {
-        // institutions
+        // foundations
         let pag_prev_s1 = $('#pag-prev-s1');
         pag_prev_s1.click(prev_foundations);
         let pag_next_s1 = $('#pag-next-s1');

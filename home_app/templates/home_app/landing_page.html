@@ -119,6 +119,11 @@
                     </div>
                 </li>
             </ul>
+            <div class="help--slides-pagination">
+                <p>Strona <i id="foundations-actual-page-number">1</i> z <i
+                        id="foundations-max-page-number">{{ foundations_max_number_of_pages }}</i></p>
+                <input type="hidden" id="foundations-count" value="{{ foundations_count }}">
+            </div>
         </div>
 
 
@@ -160,6 +165,11 @@
                     </div>
                 </li>
             </ul>
+            <div class="help--slides-pagination">
+                <p>Strona <i id="organizations-actual-page-number">1</i> z <i
+                        id="organizations-max-page-number">{{ organizations_max_number_of_pages }}</i></p>
+                <input type="hidden" id="organizations-count" value="{{ organizations_count }}">
+            </div>
         </div>
 
         <!-- SLIDE 3 -->
@@ -199,6 +209,11 @@
                     </div>
                 </li>
             </ul>
+            <div class="help--slides-pagination">
+                <p>Strona <i id="local-collections-actual-page-number">1</i> z <i
+                        id="local-collections-max-page-number">{{ local_collections_max_number_of_pages }}</i></p>
+                <input type="hidden" id="local-collections-count" value="{{ local_collections_count }}">
+            </div>
         </div>
     </section>
 {% endblock %}

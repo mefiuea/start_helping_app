@@ -1,3 +1,5 @@
+from math import ceil
+
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.core.paginator import Paginator
@@ -22,19 +24,28 @@ def landing_page_view(request):
 
         # load institutions from database
         foundations = InstitutionModel.objects.filter(type=Type.F).order_by('id')
+        foundations_count = InstitutionModel.objects.filter(type=Type.F).count()
 
         # load non-governmental organizations from database
         organizations = InstitutionModel.objects.filter(type=Type.OP).order_by('id')
+        organizations_count = InstitutionModel.objects.filter(type=Type.OP).count()
 
         # load local collections from database
         local_collections = InstitutionModel.objects.filter(type=Type.ZL).order_by('id')
+        local_collections_count = InstitutionModel.objects.filter(type=Type.ZL).count()
 
         context = {
             'sum_of_bags': sum_quantity_bags,
             'number_of_institutions': number_of_institutions,
             'foundations': foundations[0:5],
+            'foundations_count': foundations_count,
+            'foundations_max_number_of_pages': ceil(foundations_count / 5),
             'organizations': organizations[0:5],
+            'organizations_count': organizations_count,
+            'organizations_max_number_of_pages': ceil(organizations_count / 5),
             'local_collections': local_collections[0:5],
+            'local_collections_count': local_collections_count,
+            'local_collections_max_number_of_pages': ceil(local_collections_count / 5),
         }
 
         return render(request, 'home_app/landing_page.html', context=context)
