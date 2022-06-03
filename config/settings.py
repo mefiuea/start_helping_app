@@ -30,7 +30,7 @@ DEBUG = False
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
-ALLOWED_HOSTS = ['0.0.0.0', '127.0.0.1', 'localhost', 'backend']
+ALLOWED_HOSTS = ['0.0.0.0', '127.0.0.1', 'localhost', 'backend', 'start-helping-app.herokuapp.com', 'https://start-helping-app.herokuapp.com']
 INTERNAL_IPS = ALLOWED_HOSTS
 
 # Application definition
