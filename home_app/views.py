@@ -87,12 +87,13 @@ def contact_form_view(request):
 def get_foundations_by_page(request):
     page_number = request.GET.get('page')
     print('PAGE NUMBER FOUNDATIONS: ', page_number, flush=True)
+    foundations_per_page = 5
 
     if int(page_number) == 0:
-        foundations = InstitutionModel.objects.filter(type=Type.F).order_by('id')[0:5]
+        foundations = InstitutionModel.objects.filter(type=Type.F).order_by('id')[0:foundations_per_page]
     else:
         foundations = InstitutionModel.objects.filter(type=Type.F).order_by('id')[
-                      int(page_number) * 5:(int(page_number) * 5) + 5]
+                      int(page_number) * foundations_per_page:(int(page_number) * foundations_per_page) + foundations_per_page]
 
     context = {
         'page_number': page_number,
@@ -105,12 +106,13 @@ def get_foundations_by_page(request):
 def get_organizations_by_page(request):
     page_number = request.GET.get('page')
     print('PAGE NUMBER ORGANIZATIONS: ', page_number, flush=True)
+    organizations_per_page = 5
 
     if int(page_number) == 0:
-        organizations = InstitutionModel.objects.filter(type=Type.OP).order_by('id')[0:5]
+        organizations = InstitutionModel.objects.filter(type=Type.OP).order_by('id')[0:organizations_per_page]
     else:
         organizations = InstitutionModel.objects.filter(type=Type.OP).order_by('id')[
-                        int(page_number) * 5:(int(page_number) * 5) + 5]
+                        int(page_number) * organizations_per_page:(int(page_number) * organizations_per_page) + organizations_per_page]
 
     context = {
         'page_number': page_number,
@@ -123,12 +125,13 @@ def get_organizations_by_page(request):
 def get_local_collections_by_page(request):
     page_number = request.GET.get('page')
     print('PAGE NUMBER LOCAL COLLECTIONS: ', page_number, flush=True)
+    local_collections_per_page = 5
 
     if int(page_number) == 0:
-        local_collections = InstitutionModel.objects.filter(type=Type.ZL).order_by('id')[0:5]
+        local_collections = InstitutionModel.objects.filter(type=Type.ZL).order_by('id')[0:local_collections_per_page]
     else:
         local_collections = InstitutionModel.objects.filter(type=Type.ZL).order_by('id')[
-                            int(page_number) * 5:(int(page_number) * 5) + 5]
+                            int(page_number) * local_collections_per_page:(int(page_number) * local_collections_per_page) + local_collections_per_page]
 
     context = {
         'page_number': page_number,
