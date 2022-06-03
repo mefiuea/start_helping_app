@@ -14,7 +14,7 @@ import os
 from pathlib import Path
 
 import dj_database_url
-# import django_heroku
+import django_heroku
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -87,8 +87,8 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 DATABASES = {
     'default': {
-        'HOST': 'db',
-        # 'HOST': '127.0.0.1',
+        # 'HOST': 'db',
+        'HOST': '127.0.0.1',
         'NAME': os.environ.get('POSTGRES_DATABASE_NAME'),
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'USER': os.environ.get('POSTGRES_DATABASE_USER'),
@@ -163,7 +163,7 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = os.environ.get('EMAIL_USER')
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_APP_PASSWORD')
 
-# if DEBUG is False:
-#     django_heroku.settings(locals())
-# else:
-#     django_heroku.settings(locals(), databases=False)
+if DEBUG is False:
+    django_heroku.settings(locals())
+else:
+    django_heroku.settings(locals(), databases=False)
